@@ -1,0 +1,41 @@
+import { NextResponse } from "next/server";
+import { db } from "@/db";
+import { users } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import bcrypt from "bcryptjs";
+
+export async function POST(request: Request) {
+  try {
+    const { name, username, password } = await request.json();
+
+    const [existingUser] = await db
+      .select()
+      .from(users)
+      .where(eq(users.username, username));
+
+    if (existingUser) {
+      return NextResponse.json(
+        { message: "Username already taken" },
+        { status: 400 }
+      );
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await db.insert(users).values({
+      name,
+      username,
+      password: hashedPassword,
+      role: "trainer",
+      status: true,
+    });
+
+    return NextResponse.json({ message: "Trainer created successfully" });
+  } catch (error) {
+    console.error("Trainer creation error:", error);
+    return NextResponse.json(
+      { message: "An internal error occurred" },
+      { status: 500 }
+    );
+  }
+}
