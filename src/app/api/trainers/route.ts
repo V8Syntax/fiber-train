@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
+import { databaseConnectionResponse, isDatabaseConnectionError } from "@/db/errors";
 
 export async function POST(request: Request) {
   try {
@@ -33,6 +34,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Trainer created successfully" });
   } catch (error) {
     console.error("Trainer creation error:", error);
+    if (isDatabaseConnectionError(error)) {
+      return databaseConnectionResponse();
+    }
+
     return NextResponse.json(
       { message: "An internal error occurred" },
       { status: 500 }

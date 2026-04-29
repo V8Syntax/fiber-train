@@ -4,6 +4,7 @@ import { users } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { encrypt } from "@/lib/auth";
+import { databaseConnectionResponse, isDatabaseConnectionError } from "@/db/errors";
 
 export async function POST(request: Request) {
   try {
@@ -49,6 +50,10 @@ export async function POST(request: Request) {
     return response;
   } catch (error) {
     console.error("Login error:", error);
+    if (isDatabaseConnectionError(error)) {
+      return databaseConnectionResponse();
+    }
+
     return NextResponse.json(
       { message: "An internal error occurred" },
       { status: 500 }

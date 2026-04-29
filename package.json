@@ -6,7 +6,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:start": "pg_ctl -D .postgres-data -l .postgres-data/server.log -o \"-p 55432\" start",
+    "db:stop": "pg_ctl -D .postgres-data stop",
+    "db:push": "drizzle-kit push"
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
