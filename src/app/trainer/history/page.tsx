@@ -34,7 +34,7 @@ export default async function HistoryPage() {
         {allAttempts.length === 0 ? (
           <div className="p-20 text-center">
             <History size={64} className="mx-auto text-industrial-border mb-4" />
-            <p className="text-industrial-muted">You haven't taken any assessments yet.</p>
+            <p className="text-industrial-muted">You haven&apos;t taken any assessments yet.</p>
             <Link href="/trainer/assessments" className="mt-4 inline-block text-industrial-secondary font-bold hover:underline">
               Take your first assessment →
             </Link>
